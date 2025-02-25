@@ -1,0 +1,37 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# 🚀 Ignorer les fichiers d'environnement (ne pas exposer les clés API)
+.env
+.env.local
+.env.*.backup
+
+# 🛑 Ignorer les fichiers de logs et erreurs
+*.log
+logs/
+debug.log
+
+# 🔥 Ignorer les fichiers compilés Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 📦 Ignorer les fichiers de dépendances et venv
+venv/
+.virtualenv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 📄 Ignorer les bases de données locales
+*.sqlite3
+*.db
+
+# ⚙️ Ignorer les fichiers de configuration d'éditeur (VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+*.iml
+
+# 🗑️ Ignorer les dossiers temporaires
+*.bak
+*.swp
+.DS_Store
+
