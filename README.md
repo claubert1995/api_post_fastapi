@@ -24,13 +24,13 @@ uvicorn main:app --reload
 The application will be accessible at http://127.0.0.1:8000.
 
 API Endpoints
-POST /register: Register a new user
-POST /login: Login and obtain a JWT token
-GET /posts: Get all blog posts
-POST /posts: Create a new blog post (requires authentication)
-GET /posts/{post_id}: Get a specific blog post by ID
-PUT /posts/{post_id}: Update a blog post (requires authentication)
-DELETE /posts/{post_id}: Delete a blog post (requires authentication)
+POST /API/V1.0/register: Register a new user
+POST /API/V1.0/login: Login and obtain a JWT token
+GET /API/V1.0/posts: Get all blog posts
+POST /API/V1.0/posts: Create a new blog post (requires authentication)
+GET /API/V1.0/posts/{post_id}: Get a specific blog post by ID
+PUT /API/V1.0/posts/{post_id}: Update a blog post (requires authentication)
+DELETE /API/V1.0/posts/{post_id}: Delete a blog post (requires authentication)
 Learning Objectives
 Understanding FastAPI and its features
 Implementing authentication with JWT tokens
