@@ -17,6 +17,7 @@ class Token(BaseModel):
     token_type: str
 
 class TokenData(BaseModel):
+    id: Optional[int] = None
     username: Optional[str] = None
 
 # Fonction pour vérifier le mot de passe
@@ -44,9 +45,11 @@ def decode_token(token: str):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username: str = payload.get("sub")
+        id: int = payload.get("id")
+
         if username is None:
             raise JWTError
-        token_data = TokenData(username=username)
+        token_data = TokenData(id=id ,username=username)
     except JWTError:
         raise HTTPException(status_code=401, detail={"msg":"invalid token or expired token","status":401})
 

@@ -1,9 +1,7 @@
 from datetime import timedelta
-from fastapi import APIRouter,Form,File,UploadFile,Depends,HTTPException
-from .base import create_db_and_table, get_session, Post, UpdatePost, Author
+from fastapi import APIRouter,Depends,HTTPException
+from .base import create_db_and_table, get_session, Post, UpdatePost, Author, Comment
 from sqlmodel import Session,select
-from typing import List,Annotated
-from pydantic import BaseModel
 from config import settings
 from .auth import get_password_hash,Token,verify_password,create_access_token,decode_token,TokenData
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -41,7 +39,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     access_token = create_access_token(
-        data={"sub": author.name}, expires_delta=access_token_expires
+        data={"sub": author.name,"id":author.id}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -125,4 +123,19 @@ async def update_one_post(id_user: int ,post_data: UpdatePost, session: Session 
     session.refresh(stm)
     return stm
 
+@router.post("/add_comment/{id_post}")
+async def add_comment_one_post(id_post: int,comment: Comment,
+                               session: Session = Depends(get_session),
+                               token: str = Depends(oauth2_scheme)):
+    token = decode_token(token)
+    if not token.username:
+        raise HTTPException(status_code=404,detail="Post or User not found")
+    
+    comment.id_post = id_post
+    comment.id_author = token.id
+
+    session.add(comment)
+    session.commit()
+    session.refresh(comment)
+    return comment
     
