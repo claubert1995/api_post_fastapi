@@ -73,7 +73,7 @@ async def get_on_post(id_post: int,session: Session=Depends(get_session)):
         "id_author": post.id_author,
         "author": {
             "name": author.name
-        }
+        },
     }
 
 #route for add post
@@ -100,6 +100,7 @@ async def delete_one_post(id_post: int,session: Session = Depends(get_session),t
         raise HTTPException(status_code=404, detail="User not found")
 
     stm = select(Post).where(Post.id == id_post)
+
     result = session.exec(stm)
     post = result.one()
     session.delete(post)
@@ -138,4 +139,12 @@ async def add_comment_one_post(id_post: int,comment: Comment,
     session.commit()
     session.refresh(comment)
     return comment
+
+#get all comments for one post
+@router.get("/comments/{id_post}")
+async def get_comments_by_post(id_post,session: Session =Depends(get_session)):
+    stm = select(Comment).where(Comment.id_post == id_post)
+    result = session.exec(stm).all()
+
+    return result
     
