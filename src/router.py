@@ -1,7 +1,7 @@
 from datetime import timedelta
 from fastapi import APIRouter,Depends,HTTPException
 from .base import create_db_and_table, get_session, Post, UpdatePost, Author, Comment
-from sqlmodel import Session,select
+from sqlmodel import Session,select,func
 from config import settings
 from .auth import get_password_hash,Token,verify_password,create_access_token,decode_token,TokenData
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -147,4 +147,21 @@ async def get_comments_by_post(id_post,session: Session =Depends(get_session)):
     result = session.exec(stm).all()
 
     return result
-    
+
+#count comment
+@router.get("/nbr/{id_post}")
+async def nbr_comments(id_post:int,session: Session =Depends(get_session)):
+    stm = select(func.count()).where(Comment.id_post == id_post)
+    nbr = session.exec(stm).one()
+    return nbr
+
+@router.get("/all_post/{id_author}")
+async def get_all_post_by_author(id_author, session = Depends(get_session),token: str = Depends(oauth2_scheme)):
+    if not token.username:
+        raise HTTPException(status_code=404,detail="Post or User not found")
+    post = session.exec(select(Post).where(Post.id_author == id_author)).all()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return post
+
+
